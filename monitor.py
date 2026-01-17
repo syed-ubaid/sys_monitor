@@ -68,6 +68,25 @@ def get_disk_panel():
         box=box.ROUNDED
     )
 
+def get_net_panel():
+    net = psutil.net_io_counters()
+    
+    table = Table(show_header=False, expand=True, box=None)
+    table.add_column("Key", style="yellow")
+    table.add_column("Value", style="cyan")
+    
+    table.add_row("Bytes Sent", f"{net.bytes_sent / (1024**2):.2f} MB")
+    table.add_row("Bytes Recv", f"{net.bytes_recv / (1024**2):.2f} MB")
+    table.add_row("Packets Sent", f"{net.packets_sent}")
+    table.add_row("Packets Recv", f"{net.packets_recv}")
+    
+    return Panel(
+        Align.center(table),
+        title="[b]Network Status[/b]",
+        border_style="yellow",
+        box=box.ROUNDED
+    )
+
 def make_layout():
     layout = Layout()
     layout.split_column(
@@ -75,9 +94,16 @@ def make_layout():
         Layout(name="body")
     )
     layout["body"].split_row(
+        Layout(name="left_col"),
+        Layout(name="right_col")
+    )
+    layout["left_col"].split_column(
         Layout(name="cpu"),
-        Layout(name="mem"),
-        Layout(name="disk")
+        Layout(name="mem")
+    )
+    layout["right_col"].split_column(
+        Layout(name="disk"),
+        Layout(name="net")
     )
     return layout
 
@@ -86,6 +112,7 @@ def update_layout(layout):
     layout["cpu"].update(get_cpu_panel())
     layout["mem"].update(get_mem_panel())
     layout["disk"].update(get_disk_panel())
+    layout["net"].update(get_net_panel())
 
 def main():
     layout = make_layout()
