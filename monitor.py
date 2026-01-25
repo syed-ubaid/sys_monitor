@@ -1,5 +1,6 @@
 import time
 import psutil
+import datetime
 from rich.console import Console
 from rich.layout import Layout
 from rich.panel import Panel
@@ -10,6 +11,13 @@ from rich import box
 
 console = Console()
 
+def get_uptime_str():
+    boot_time = psutil.boot_time()
+    now = time.time()
+    uptime_seconds = int(now - boot_time)
+    uptime_str = str(datetime.timedelta(seconds=uptime_seconds))
+    return uptime_str
+
 def get_cpu_panel():
     cpu_percent = psutil.cpu_percent(interval=None)
     cpu_freq = psutil.cpu_freq()
@@ -19,7 +27,8 @@ def get_cpu_panel():
     table.add_column("Value", style="green")
     
     table.add_row("Usage", f"{cpu_percent}%")
-    table.add_row("Frequency", f"{cpu_freq.current:.2f} Mhz")
+    if cpu_freq:
+        table.add_row("Frequency", f"{cpu_freq.current:.2f} Mhz")
     table.add_row("Cores", f"{psutil.cpu_count()}")
     
     return Panel(
@@ -108,7 +117,8 @@ def make_layout():
     return layout
 
 def update_layout(layout):
-    layout["header"].update(Panel(Align.center("[bold white]SysMonitor - Live System Dashboard[/]"), style="on blue"))
+    uptime = get_uptime_str()
+    layout["header"].update(Panel(Align.center(f"[bold white]SysMonitor - Live System Dashboard | Uptime: {uptime}[/]"), style="on blue"))
     layout["cpu"].update(get_cpu_panel())
     layout["mem"].update(get_mem_panel())
     layout["disk"].update(get_disk_panel())
