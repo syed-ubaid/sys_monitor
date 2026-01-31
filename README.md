@@ -15,6 +15,10 @@ SysMonitor provides a beautiful, live overview of your system's critical metrics
 
 ## 🛠️ Installation
 
+### 🆕 Recent Updates
+*   **v1.1**: Improved dashboard layout and color scheme.
+*   **Performance**: Optimized refresh rate for lower CPU overhead.
+
 1.  **Clone the repository**:
     ```bash
     git clone https://github.com/yourusername/sys_monitor.git
