@@ -1,4 +1,10 @@
 import time
+"""
+System Monitor Script
+
+This script monitors system resources such as CPU and memory usage.
+It prints the usage statistics to the console at regular intervals.
+"""
 import psutil
 import datetime
 from rich.console import Console
